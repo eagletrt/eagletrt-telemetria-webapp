@@ -1,56 +1,56 @@
 <template>
   <div class="home">
-    <div class="graph" ref="graph"></div>
+    {{count}}
+    <button @click="increment()">CIAO</button>
+    <div id="graph" class="graph" ref="graph"></div>
   </div>
 </template>
 
 <script lang="ts">
+import Graph from '@/utils/graphs/graph';
 import { defineComponent } from "vue";
-import Dygraph from "dygraphs";
+import MosquittoService from '../utils/mosquitto'
 
 export default defineComponent({
   name: "Home",
   props: {
-    fuck: {
-      type: Number,
-      defult: 1,
-    },
   },
   data() {
     return {
-      graph: null as Dygraph | null,
-      pippo: [
-        [1, [1, 2]],
-        [2, [2, 3]],
-      ] as any,
+      graph: null as Graph | null,
     };
-  },
-  watch: {
-    fuck() {
-      // this.pippo.push(this.pippo.length, this.fuck)
-    },
   },
   computed: {
     graphEl(): HTMLDivElement {
       return this.$refs.graph as HTMLDivElement;
     },
+    count(): number {
+      // return this.$store.state.chartData[''];
+      return 0;
+    }
   },
   mounted() {
-    const pippo = [
-      [1, 1],
-      [2, 2],
-    ] as any;
+    this.graph = new Graph(this.graphEl)
+    this.graph.addLine('pippo', {
+      name: 'pippo',
+      x: [1,2,3],
+      y: [1,2,3]
+    })
+
+    let i = 0;
     setInterval(() => {
-      //pippo.push([pippo.length, [Math.random() * 1000 % 10, Math.random() * 1000 % 10]])
-    }, 1000);
+      this.graph?.update('pippo', [i, i+1, i+2], [4,5,6])
+      i += 3
+    }, 1000)
 
-    const sangennaro = [
-      [1, 1, 2],
-      [2, 2, 1],
-    ];
-
-    this.graph = new Dygraph(this.graphEl, sangennaro);
+    const ms = new MosquittoService(this.$store);
+    ms.startSimulator();
   },
+  methods: {
+    increment() {
+      this.$store.commit('increment')
+    }
+}
 });
 </script>
 
