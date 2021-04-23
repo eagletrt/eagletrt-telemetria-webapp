@@ -34,14 +34,24 @@ export default class MosquittoService {
         }
     }
 
+    private i = 0;
+
     private updateStoreStatus(mqttObj: any) {
+        this.i++;
         const payload: AppendDataPayload = {} 
-        this.loopObjectProperties(mqttObj, (value, propName) => {
-            const fieldName = this.pairNameObjectProperty[propName];
+        // this.loopObjectProperties(mqttObj, (value, propName) => {
+        //     const fieldName = this.pairNameObjectProperty[propName];
+        //     if (fieldName) {
+        //         payload[fieldName] = { dates: [new Date().getTime()], values: [Math.random()] }
+        //     }
+        // })
+
+        for (const k in this.pairNameObjectProperty) {
+            const fieldName = this.pairNameObjectProperty[k];
             if (fieldName) {
-                payload[fieldName] = [{ date: 1, value: 1 }]
+                payload[fieldName] = { dates: [new Date().getTime()], values: [Math.random()] }
             }
-        })
+        }
         this.store.commit('appendData', payload)
     }
 

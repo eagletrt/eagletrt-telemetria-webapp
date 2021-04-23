@@ -1,9 +1,10 @@
 export interface Data {
-    value: number;
-    date: number;
+    values: number[];
+    dates: number[];
 }
 
 export interface AppendDataPayload {
-    [fieldName: string]: Data[];
+    [fieldName: string]: Data;
 }
 
+export type ChartData = { [id: string]: Data };

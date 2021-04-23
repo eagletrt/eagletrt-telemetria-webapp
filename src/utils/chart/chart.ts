@@ -2,34 +2,38 @@ import * as Plotly from 'plotly.js';
 
 
 // export type Dataset = [number, ...number[]][] | [Date, ...number[]][];
-export type GraphDataX = number | Date;
-export type GraphDataY = (null | number)[];
-export type GraphData = [GraphDataX, ...GraphDataY];
+export type ChartDataX = number | Date;
+export type ChartDataY = (null | number)[];
+export type ChartData = [ChartDataX, ...ChartDataY];
 
-export interface GraphSettings {
+export interface ChartSettings {
     dataWindow: number;
 }
 
-export default class Graph {
-    private graph: Plotly.PlotlyHTMLElement | null = null;
+export default class Chart {
+    private chart: Plotly.PlotlyHTMLElement | null = null;
     private data: Plotly.Data[];
     private elementId: string;
     private tracesNameMap: { [id: string]: number } = {}
     private traceValues: { x: number[][]; y: number[][] } = { x: [], y: []};
 
-    private settings: GraphSettings = {
+    private settings: ChartSettings = {
         dataWindow: 10
     };
 
-    constructor(htmlElement: HTMLElement, settings: Partial<GraphSettings> = {}) {
+    constructor(htmlElement: HTMLElement, settings: Partial<ChartSettings> = {}) {
 
         this.data = [];
         this.elementId = htmlElement.id;
-        Plotly.newPlot(this.elementId, this.data).then(g => { this.graph = g });
+        Plotly.newPlot(this.elementId, this.data).then(g => { this.chart = g });
 
         if (settings.dataWindow) {
             this.settings.dataWindow = settings.dataWindow
         }
+    }
+
+    public redraw() {
+        Plotly.redraw(this.elementId);
     }
     
     public addLine(name: string, data: Plotly.Data) {
