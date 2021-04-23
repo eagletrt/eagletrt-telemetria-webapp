@@ -6,6 +6,18 @@
   <router-view/>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
+import MosquittoService from './utils/mosquitto'
+
+export default defineComponent({
+  mounted() {
+    const ms = new MosquittoService(this.$store);
+    ms.startSimulator();
+  }
+});
+</script>
+
 <style lang="scss">
 body {
   margin: 0;

@@ -1,20 +1,33 @@
 <template>
   <div class="home">
     <div id="graph" class="graph" ref="graph"></div>
-    <ul>
-      <li v-for="lineName in linesNames" :key="lineName">
-        <input type="checkbox" :value="lineName" :id="'chartcheckbox-' + lineName" @change="toggleLine(lineName, $event.target.checked)">
-        <label :for="'chartcheckbox-' + lineName">{{lineName}}</label>
-        </li>
-    </ul>
+    <div>
+      <h3>Lines</h3>
+      <input type="text" v-model="searchLines" />
+      <ul>
+        <li v-for="lineName in filteredLinesNames" :key="lineName">
+          <input type="checkbox" :value="lineName" :id="'chartcheckbox-' + lineName" @change="toggleLine(lineName, $event.target.checked)" v-model="activeLines">
+          <label :for="'chartcheckbox-' + lineName">{{lineName}}</label>
+          </li>
+      </ul>
+    </div>
+    <div>
+      <h3>Active</h3>
+      <ul>
+        <li v-for="lineName in activeLines" :key="lineName">
+          <input type="checkbox" :value="lineName" :id="'chartcheckbox-' + lineName" @change="toggleLine(lineName, $event.target.checked)" v-model="activeLines">
+          <label :for="'chartcheckbox-' + lineName">{{lineName}}</label>
+          </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Graph from '@/utils/chart/chart';
 import { defineComponent } from "vue";
-import MosquittoService from '../utils/mosquitto'
 import { ChartData } from '../types/chart-data'
+import config from '../config'
 
 export default defineComponent({
   name: "Home",
@@ -23,6 +36,8 @@ export default defineComponent({
   data() {
     return {
       chart: null as Graph | null,
+      activeLines: [] as string[],
+      searchLines: ''
     };
   },
   computed: {
@@ -35,21 +50,19 @@ export default defineComponent({
     linesNames(): string[] {
       return this.$store.state.keys;
     },
-    count(): number {
-      // return this.$store.state.chartData[''];
-      return 0;
+    filteredLinesNames(): string[] {
+      if (this.searchLines.trim()) {
+        const query = this.searchLines.trim().toLowerCase();
+        return this.linesNames.filter(x => x.toLowerCase().includes(query))
+      } else {
+        return this.linesNames;
+      }
     }
   },
   mounted() {
-    const ms = new MosquittoService(this.$store);
-    ms.startSimulator();
-
-    this.chart = new Graph(this.graphEl)
-    this.chart.addLine('INVERTER_RIGHT_SPEED', {
-      name: 'INVERTER_RIGHT_SPEED',
-      x: this.$store.state.chartData['INVERTER_RIGHT_SPEED'].dates,
-      y: this.$store.state.chartData['INVERTER_RIGHT_SPEED'].values
-    })
+    this.chart = new Graph(this.graphEl);
+    this.activeLines = JSON.parse(localStorage.getItem('activeLines') ?? '[]') as string[];
+    this.activeLines.forEach(l => this.toggleLine(l, true, true));
 
     // let i = 0;
     setInterval(() => {
@@ -57,18 +70,27 @@ export default defineComponent({
       this.chart?.redraw();
       // this.graph?.update('pippo', [i, i+1, i+2], [4,5,6])
       // i += 3
-    }, 1000)
+    }, config.updateRate)
   },
   methods: {
     increment() {
       this.$store.commit('increment')
     },
-    toggleLine(lineName: string, toggle: boolean) {
-      this.chart?.addLine(lineName, {
-        name: 'INVERTER_RIGHT_SPEED',
-        x: this.$store.state.chartData[lineName].dates,
-        y: this.$store.state.chartData[lineName].values
-      })
+    toggleLine(lineName: string, toggle: boolean, ignoreLocalStorage = false) {
+      if (toggle) {
+          this.chart?.addLine(lineName, {
+            name: lineName,
+            x: this.$store.state.chartData[lineName].dates,
+            y: this.$store.state.chartData[lineName].values
+        });
+      } else {
+        this.chart?.removeLine(lineName);
+      }
+  
+      if (!ignoreLocalStorage) {
+        localStorage.setItem('activeLines', JSON.stringify(this.activeLines));
+        console.log('SETTING ', lineName);
+      }
     }
 }
 });
@@ -84,5 +106,6 @@ export default defineComponent({
 
 ul {
   list-style: none;
+  padding: 0;
 }
 </style>

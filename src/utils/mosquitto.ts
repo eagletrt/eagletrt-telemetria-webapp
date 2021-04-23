@@ -1,7 +1,7 @@
 import { Store } from 'vuex';
 import { StoreState } from '../store'
 import { AppendDataPayload } from '../types/chart-data'
-
+import config from '../config'
 
 export default class MosquittoService {
 
@@ -18,7 +18,7 @@ export default class MosquittoService {
     }
 
 
-    public startSimulator(ms = 500) {
+    public startSimulator(ms = config.updateRate) {
         setInterval(() => {
             this.updateStoreStatus({
                 inverters: { right: { speed: 1 } },

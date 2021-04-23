@@ -37,11 +37,27 @@ export default class Chart {
     }
     
     public addLine(name: string, data: Plotly.Data) {
+        if (this.tracesNameMap[name]) {
+            return;
+        }
         this.tracesNameMap[name] = this.data.length;
         this.data.push(data)
-        Plotly.redraw(this.elementId)
+        this.redraw();
         this.traceValues.x.push([])
         this.traceValues.y.push([])
+    }
+
+    public removeLine(name: string) {
+        const index = this.tracesNameMap[name];
+        if (index === undefined) {
+            return;
+        }
+        this.data.splice(index, index + 1);
+        this.redraw();
+        this.traceValues.x.splice(index, index + 1);
+        this.traceValues.y.splice(index, index + 1);
+
+        delete this.tracesNameMap[name];
     }
 
     public async update(name: string, x: number[], y: number[]) {
