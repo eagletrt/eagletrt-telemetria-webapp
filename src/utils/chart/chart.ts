@@ -25,7 +25,7 @@ export default class Chart {
 
         this.data = [];
         this.elementId = htmlElement.id;
-        Plotly.newPlot(this.elementId, this.data).then(g => { this.chart = g });
+        Plotly.newPlot(this.elementId, this.data, undefined, { responsive: true }).then(g => { this.chart = g });
 
         if (settings.dataWindow) {
             this.settings.dataWindow = settings.dataWindow

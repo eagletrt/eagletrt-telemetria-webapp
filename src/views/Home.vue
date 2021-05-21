@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <div id="graph" class="graph" ref="graph"></div>
-    <div>
+    <div class="select-line-template">
+      <SelectLineTemplate class="select-line-template"></SelectLineTemplate>
+    </div>
+    <!-- <div>
       <h3>Lines</h3>
       <input type="text" v-model="searchLines" />
       <ul>
@@ -19,7 +22,7 @@
           <label :for="'chartcheckbox-' + lineName">{{lineName}}</label>
           </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -28,9 +31,12 @@ import Graph from '@/utils/chart/chart';
 import { defineComponent } from "vue";
 import { ChartData } from '../types/chart-data'
 import config from '../config'
+import SelectLineTemplate from '@/components/SelectLineTemplate.vue';
+
 
 export default defineComponent({
   name: "Home",
+  components: { SelectLineTemplate },
   props: {
   },
   data() {
@@ -107,5 +113,9 @@ export default defineComponent({
 ul {
   list-style: none;
   padding: 0;
+}
+
+.select-line-template {
+  width: 400px;
 }
 </style>

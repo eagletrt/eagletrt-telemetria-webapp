@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
+import Grid from '../views/Grid.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -7,7 +8,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: Home
   },
-  
+  {
+    path: '/grid',
+    name: 'Grid',
+    component: Grid
+  },
 ]
 
 const router = createRouter({
