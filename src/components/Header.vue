@@ -5,7 +5,7 @@
                 <img src="img/LOGO.png">
                 <h1>Eagle trt - Telemetry</h1>
             </router-link>
-            <router-link to="/Grid">Grid</router-link>
+            <!-- <router-link to="/Grid">Grid</router-link> -->
         </nav>
     </header>
 </template>

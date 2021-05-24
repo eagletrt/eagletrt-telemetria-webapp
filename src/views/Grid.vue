@@ -1,30 +1,42 @@
 <template>
   <div class="home">
-    <div class="select-line-template">
+    <!-- <div class="select-line-template">
       <SelectLineTemplate class="select-line-template"></SelectLineTemplate>
-    </div>
-    <div class="grid col-3">
-      <div>0</div>
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
-      <div>4</div>
-      <div>5</div>
-      <div>6</div>
-      <div>7</div>
-      <div>8</div>
+    </div> -->
+    <div class="grid col-2">
+      <div>
+        <Chart :chartId="'abc1'" :title="'BMS Voltage'"
+          :activeLinesInput="['INVERTER_RIGHT_SPEED']"
+        ></Chart>
+      </div>
+      <div>
+        <Chart :chartId="'abc2'" :title="'BMS Current'"
+          :activeLinesInput="['INVERTER_RIGHT_TEMPERATURE_IGBT']"
+        ></Chart>
+      </div>
+      <div>
+        <Chart :chartId="'abc3'" :title="'Inverter speed'"
+          :activeLinesInput="['INVERTER_RIGHT_TEMPERATURE_MOTORS']"
+        ></Chart>
+      </div>
+      <div>
+        <Chart :chartId="'abc4'" :title="'Inverter torque'"
+          :activeLinesInput="['INVERTER_RIGHT_TORQUE']"
+        ></Chart>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SelectLineTemplate from '@/components/SelectLineTemplate.vue';
+// import SelectLineTemplate from '@/components/SelectLineTemplate.vue';
+import Chart from '@/components/Chart.vue';
 
 
 export default defineComponent({
   name: "Grid",
-  components: { SelectLineTemplate },
+  components: { Chart},
   props: {
   },
   data() {
@@ -55,12 +67,14 @@ export default defineComponent({
 
 .home {
   display: flex;
-  background-color: black;
+  background-color: #333;
   height: 100%;
   > .grid {
     color: white;
     display: grid;
     flex-grow: 1;
+    > div {
+    }
   }
   > .select-line-template {
     height: 100%;

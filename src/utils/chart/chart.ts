@@ -15,17 +15,44 @@ export default class Chart {
     private data: Plotly.Data[];
     private elementId: string;
     private tracesNameMap: { [id: string]: number } = {}
-    private traceValues: { x: number[][]; y: number[][] } = { x: [], y: []};
+    private traceValues: { x: number[][]; y: number[][] } = { x: [], y: [] };
 
     private settings: ChartSettings = {
         dataWindow: 10
     };
 
-    constructor(htmlElement: HTMLElement, settings: Partial<ChartSettings> = {}) {
+    constructor(htmlElement: HTMLElement, title: string, settings: Partial<ChartSettings> = {}) {
 
         this.data = [];
         this.elementId = htmlElement.id;
-        Plotly.newPlot(this.elementId, this.data, undefined, { responsive: true }).then(g => { this.chart = g });
+        Plotly.newPlot(this.elementId, this.data, {
+            'plot_bgcolor': "#333",
+            'paper_bgcolor': "#333",
+            margin: {
+                t: 40,
+                b: 30,
+                l: 0,
+                r: 0,
+            },
+            xaxis: {
+                color: "#FFF",
+                tickcolor: '#FFF'
+            },
+            yaxis: {
+                color: "#FFF",
+                tickcolor: '#FFF'
+            },
+            title: {
+                text: title,
+                font: {
+                    family: 'Avenir, Helvetica, Arial, sans-serif',
+                    size: 24,
+                    color: 'white'
+                },
+                xref: 'paper',
+                x: 0.05,
+            },
+        }, { responsive: true }).then(g => { this.chart = g });
 
         if (settings.dataWindow) {
             this.settings.dataWindow = settings.dataWindow
@@ -35,7 +62,7 @@ export default class Chart {
     public redraw() {
         Plotly.redraw(this.elementId);
     }
-    
+
     public addLine(name: string, data: Plotly.Data) {
         if (this.tracesNameMap[name]) {
             return;
@@ -74,7 +101,7 @@ export default class Chart {
 
         // console.log(this.traceValues.x[i].length);
         // console.log(this.traceValues.y[i].length);
-        
+
 
         await Plotly.update(this.elementId, this.traceValues, {}, [0]);
     }

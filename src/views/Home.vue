@@ -4,7 +4,7 @@
     <div class="select-line-template">
       <SelectLineTemplate class="select-line-template"></SelectLineTemplate>
     </div>
-    <!-- <div>
+    <div>
       <h3>Lines</h3>
       <input type="text" v-model="searchLines" />
       <ul>
@@ -22,14 +22,14 @@
           <label :for="'chartcheckbox-' + lineName">{{lineName}}</label>
           </li>
       </ul>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Graph from '@/utils/chart/chart';
 import { defineComponent } from "vue";
-import { ChartData } from '../types/chart-data'
+import { ChartData } from '@/types/chart-data'
 import config from '../config'
 import SelectLineTemplate from '@/components/SelectLineTemplate.vue';
 
@@ -66,7 +66,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.chart = new Graph(this.graphEl);
+    this.chart = new Graph(this.graphEl, '');
     this.activeLines = JSON.parse(localStorage.getItem('activeLines') ?? '[]') as string[];
     this.activeLines.forEach(l => this.toggleLine(l, true, true));
 
@@ -95,7 +95,6 @@ export default defineComponent({
   
       if (!ignoreLocalStorage) {
         localStorage.setItem('activeLines', JSON.stringify(this.activeLines));
-        console.log('SETTING ', lineName);
       }
     }
 }
