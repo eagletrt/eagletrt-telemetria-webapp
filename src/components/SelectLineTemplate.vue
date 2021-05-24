@@ -1,16 +1,17 @@
 <template>
-    <div class="header">
-        <h3>Select chart</h3>
-        <button>collapse</button>
-    </div>
-    <div class="list-wrapper" :class="{ soloNotSelected: !solo }">
-        <ul>
-            <li v-for="(value, name) in templateList" :key="name" :class="{ active: value, solo: solo === name }" @click="toggleSelected(name, value)">
-                <p class="toggle-line show">V</p>
-                <p class="toggle-line solo" @click="toggleSolo(name); $event.stopPropagation();">S</p>
-                <p class="line-title">{{ name }}</p>
-            </li>
-        </ul>
+    <div class="select-line-template">
+        <div class="header">
+            <h3>Charts</h3>
+        </div>
+        <div class="list-wrapper" :class="{ soloNotSelected: !solo }">
+            <ul>
+                <li v-for="(value, name) in templateList" :key="name" :class="{ active: value, solo: solo === name }" @click="toggleSelected(name, value)">
+                    <p class="toggle-line show">V</p>
+                    <p class="toggle-line solo" @click="toggleSolo(name); $event.stopPropagation();">S</p>
+                    <p class="line-title">{{ name }}</p>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -38,16 +39,24 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.select-line-template {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 .header {
     background-color: #333;
     color: white;
     display: flex;
     h3 {
         flex-grow: 1;
-        padding: 0.5em;
+        padding: 0.2em;
+        text-align: center;
+        margin: 0.5em;
     }
 }
 .list-wrapper {
+    flex-grow: 1;
     &.soloNotSelected li.active {
         background-color: #555;
     }
